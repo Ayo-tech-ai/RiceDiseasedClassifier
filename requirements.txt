@@ -1,10 +1,5 @@
-langchain
-langchain-core
-langchain-community
-langgraph
-langchain-groq
-google-search-results 
-numexpr 
-langchainhub 
-python-dotenv
-psycopg2
+streamlit
+torch
+torchvision
+pillow
+gdown
