@@ -5,6 +5,8 @@ import torchvision.transforms as transforms
 from PIL import Image
 import gdown
 import os
+import torchvision.models as models
+from torch.serialization import add_safe_class
 
 # -------------------------------
 # 1. Load Model from Google Drive
@@ -13,12 +15,15 @@ import os
 MODEL_PATH = "RiceClassifier.pth"
 FILE_ID = "13nlieOIczZPmbCaA8M2AlefOrXINTXyL"  # Your actual file ID
 
+# Add your model architecture to the safe global list
+add_safe_class(models.resnet.ResNet)
+
 @st.cache_resource
 def load_model():
     if not os.path.exists(MODEL_PATH):
         url = f"https://drive.google.com/uc?id={FILE_ID}"
         gdown.download(url, MODEL_PATH, quiet=False)
-    model = torch.load(MODEL_PATH, map_location='cpu')
+    model = torch.load(MODEL_PATH, map_location='cpu', weights_only=False)
     model.eval()
     return model
 
