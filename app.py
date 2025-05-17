@@ -5,24 +5,21 @@ import torchvision.transforms as transforms
 from PIL import Image
 import gdown
 import os
-import torchvision.models as models
-from torch.serialization import add_safe_class
 
 # -------------------------------
 # 1. Load Model from Google Drive
 # -------------------------------
 
 MODEL_PATH = "RiceClassifier.pth"
-FILE_ID = "13nlieOIczZPmbCaA8M2AlefOrXINTXyL"  # Your actual file ID
-
-# Add your model architecture to the safe global list
-add_safe_class(models.resnet.ResNet)
+FILE_ID = "13nlieOIczZPmbCaA8M2AlefOrXINTXyL"  # Your actual Drive file ID
 
 @st.cache_resource
 def load_model():
     if not os.path.exists(MODEL_PATH):
         url = f"https://drive.google.com/uc?id={FILE_ID}"
         gdown.download(url, MODEL_PATH, quiet=False)
+
+    # Force loading full model (architecture + weights)
     model = torch.load(MODEL_PATH, map_location='cpu', weights_only=False)
     model.eval()
     return model
@@ -59,7 +56,7 @@ def preprocess_image(image):
 # -------------------------------
 
 st.title("Rice Leaf Disease Classifier")
-st.write("Upload an image of a rice leaf and the model will predict the disease class.")
+st.write("Upload an image of a rice leaf and get a prediction of the disease class.")
 
 uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
 
